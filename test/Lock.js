@@ -12,6 +12,7 @@ describe("Lock", function () {
   async function deployOneYearLockFixture() {
     const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
     const ONE_GWEI = 1_000_000_000;
+    const contract = 0x5FbDB2315678afecb367f032d93F642f64180aa3
 
     const lockedAmount = ONE_GWEI;
     const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
