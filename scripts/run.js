@@ -1,37 +1,57 @@
 const main = async () => {
     const gameContractFactory = await hre.ethers.getContractFactory("MyEpicGame");
+    const characterNames = ["Naruto Usumaki", "Sasuke Uchiha", "Itachi Uchiha"];
+    const characterImageURIs = [
+      "https://imgur.com/ic7LVxd.png",
+      "https://imgur.com/JrMUhv2.png",
+      "https://imgur.com/dVlqUJc.png",
+    ];
+    const characterHp = [100, 200, 300];
+    const characterAttackDmg = [100, 50, 25];
+
+    const bossName = "Capitão Nascimento";
+    const bossImageURI = "https://i.imgur.com/yWpKMDt.png";
+    const bossHp = 20000;
+    const bossAttackDamage = 50;
+
     const gameContract = await gameContractFactory.deploy(
-      ["Anitta", "Ronaldinho Gaúcho", "Zeca Pagodinho"],
-          [
-              "https://i.imgur.com/gC5qXsl.png",
-              "https://i.imgur.com/0PvxtwP.png",
-              "https://i.imgur.com/Pj8lHpM.png",
-          ],
-      [100, 200, 300], // HP values
-      [100, 50, 25] // Attack damage values
+      characterNames, 
+      characterImageURIs, 
+      characterHp, 
+      characterAttackDmg, 
+      bossName, 
+      bossImageURI, 
+      bossHp, 
+      bossAttackDamage
     );
+  
+    
     await gameContract.deployed();
-    console.log("Contrato implantado no endereço:", gameContract.address);
+    console.log("Contract deployed to:", gameContract.address);
 
     let txn;
-    // Só temos três personagens.
-    // Uma NFT com personagem no index 2 da nossa array.
+    // We only have three characters.
+    // an NFT w/ the character at index 2 of our array.
     txn = await gameContract.mintCharacterNFT(2);
     await txn.wait();
 
-    // Pega o valor da URI da NFT
-    let returnedTokenUri = await gameContract.tokenURI(1);
-    console.log("Token URI:", returnedTokenUri);
-  };
-  
-  const runMain = async () => {
-    try {
-      await main();
-      process.exit(0);
-    } catch (error) {
-      console.log(error);
-      process.exit(1);
-    }
-  };
-  
-  runMain();
+    txn = await gameContract.attackBoss();
+    await txn.wait();
+
+    txn = await gameContract.attackBoss();
+    await txn.wait();
+
+    console.log("Done!");
+};
+
+const runMain = async () => {
+  try {
+    await main();
+    process.exit(0);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+runMain();
